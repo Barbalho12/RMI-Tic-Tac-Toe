@@ -7,19 +7,20 @@ import java.util.List;
  * This class is responsible for the management of the ultimate tic-tac-toe board.
  */
 
-public class UltimateBoard {
-	private List<Board> boards;
+public class UltimateBoard implements IBoard{
+	
+	private List<BasicBoard> boards;
     private char winner;
     
     public UltimateBoard(){
-    	boards = new ArrayList<Board>();
+    	boards = new ArrayList<BasicBoard>();
     	    	
         for(int i=0; i<9; i++){
-            this.boards.add(new Board());
+            this.boards.add(new BasicBoard());
         }
-        boards.add(0, null);  //Tabuleiros vão de 1 à 9.
+        boards.add(0, null);  //Tabuleiros vÃ£o de 1 Ã  9.
 
-        this.winner = '_';
+        this.winner = E;
     }
 
     /**
@@ -27,7 +28,7 @@ public class UltimateBoard {
      * @param i
      * @return
      */
-    public Board at(int i){
+    public BasicBoard at(int i){
         if(i!=0){
             return boards.get(i);
         }
@@ -41,32 +42,40 @@ public class UltimateBoard {
 	 * @return 1 if the 'X' player won, else -1 if the player 'O' won
 	 */
     public int check_win(){
-        if ( (boards.get(1).getWinner() == 'X' && boards.get(2).getWinner() == 'X' && boards.get(3).getWinner() == 'X')||
-             (boards.get(4).getWinner() == 'X' && boards.get(5).getWinner() == 'X' && boards.get(6).getWinner() == 'X')||
-             (boards.get(7).getWinner() == 'X' && boards.get(8).getWinner() == 'X' && boards.get(9).getWinner() == 'X')||
-             (boards.get(1).getWinner() == 'X' && boards.get(4).getWinner() == 'X' && boards.get(7).getWinner() == 'X')||
-             (boards.get(2).getWinner() == 'X' && boards.get(5).getWinner() == 'X' && boards.get(8).getWinner() == 'X')||
-             (boards.get(3).getWinner() == 'X' && boards.get(6).getWinner() == 'X' && boards.get(9).getWinner() == 'X')||
-             (boards.get(1).getWinner() == 'X' && boards.get(5).getWinner() == 'X' && boards.get(9).getWinner() == 'X')||
-             (boards.get(3).getWinner() == 'X' && boards.get(5).getWinner() == 'X' && boards.get(7).getWinner() == 'X')
-           ){
-            this.winner = 'X';
+    	
+    	int XXX = X+X+X;
+    	
+        if ( (boards.get(1).getWinner() + boards.get(2).getWinner() + boards.get(3).getWinner() == XXX)||
+             (boards.get(4).getWinner() + boards.get(5).getWinner() + boards.get(6).getWinner() == XXX)||
+             (boards.get(7).getWinner() + boards.get(8).getWinner() + boards.get(9).getWinner() == XXX)||
+             (boards.get(1).getWinner() + boards.get(4).getWinner() + boards.get(7).getWinner() == XXX)||
+             (boards.get(2).getWinner() + boards.get(5).getWinner() + boards.get(8).getWinner() == XXX)||
+             (boards.get(3).getWinner() + boards.get(6).getWinner() + boards.get(9).getWinner() == XXX)||
+             (boards.get(1).getWinner() + boards.get(5).getWinner() + boards.get(9).getWinner() == XXX)||
+             (boards.get(3).getWinner() + boards.get(5).getWinner() + boards.get(7).getWinner() == XXX)){
+            
+        	this.winner = X;
             return 1;
+            
         }
-        else if((boards.get(1).getWinner() == 'O' && boards.get(2).getWinner() == 'O' && boards.get(3).getWinner() == 'O')||
-                (boards.get(4).getWinner() == 'O' && boards.get(5).getWinner() == 'O' && boards.get(6).getWinner() == 'O')||
-                (boards.get(7).getWinner() == 'O' && boards.get(8).getWinner() == 'O' && boards.get(9).getWinner() == 'O')||
-                (boards.get(1).getWinner() == 'O' && boards.get(4).getWinner() == 'O' && boards.get(7).getWinner() == 'O')||
-                (boards.get(2).getWinner() == 'O' && boards.get(5).getWinner() == 'O' && boards.get(8).getWinner() == 'O')||
-                (boards.get(3).getWinner() == 'O' && boards.get(6).getWinner() == 'O' && boards.get(9).getWinner() == 'O')||
-                (boards.get(1).getWinner() == 'O' && boards.get(5).getWinner() == 'O' && boards.get(9).getWinner() == 'O')||
-                (boards.get(3).getWinner() == 'O' && boards.get(5).getWinner() == 'O' && boards.get(7).getWinner() == 'O')
-                ){
-                this.winner = 'O';
-                return -1;
+        
+        int OOO = O+O+O;
+        
+        if ( (boards.get(1).getWinner() + boards.get(2).getWinner() + boards.get(3).getWinner() == OOO)||
+                (boards.get(4).getWinner() + boards.get(5).getWinner() + boards.get(6).getWinner() == OOO)||
+                (boards.get(7).getWinner() + boards.get(8).getWinner() + boards.get(9).getWinner() == OOO)||
+                (boards.get(1).getWinner() + boards.get(4).getWinner() + boards.get(7).getWinner() == OOO)||
+                (boards.get(2).getWinner() + boards.get(5).getWinner() + boards.get(8).getWinner() == OOO)||
+                (boards.get(3).getWinner() + boards.get(6).getWinner() + boards.get(9).getWinner() == OOO)||
+                (boards.get(1).getWinner() + boards.get(5).getWinner() + boards.get(9).getWinner() == OOO)||
+                (boards.get(3).getWinner() + boards.get(5).getWinner() + boards.get(7).getWinner() == OOO)){
+               
+           	this.winner = O;
+              return -1;
+               
         }
-        else
-            return 0;
+
+        return 0;
     }
 
 	/**
@@ -74,10 +83,10 @@ public class UltimateBoard {
 	 * @return 1 if it was a draw, else 0
 	 */
     public int check_draw(){
-        if ((check_win() == 0)                 && (boards.get(1).getWinner()!= '_') && (boards.get(2).getWinner() != '_') &&
-            (boards.get(3).getWinner() != '_') && (boards.get(4).getWinner()!= '_') && (boards.get(5).getWinner() != '_') &&
-            (boards.get(6).getWinner() != '_') && (boards.get(7).getWinner()!= '_') && (boards.get(8).getWinner() != '_') &&
-            (boards.get(9).getWinner() != '_'))
+        if ((check_win() == 0)                 && (boards.get(1).getWinner()!= E) && (boards.get(2).getWinner() != E) &&
+            (boards.get(3).getWinner() != E) && (boards.get(4).getWinner()!= E) && (boards.get(5).getWinner() != E) &&
+            (boards.get(6).getWinner() != E) && (boards.get(7).getWinner()!= E) && (boards.get(8).getWinner() != E) &&
+            (boards.get(9).getWinner() != E))
         {
             return 1;
         }
@@ -99,8 +108,7 @@ public class UltimateBoard {
                 for(j=1; j<4; j++){
                     System.out.print(boards.get(i).getBoardCharAt(j+contj) + " ");
                 }
-                if(j%3!=0)
-                	System.out.print(" | ");
+                if(j%3!=0)	System.out.print(" | ");
             }
             contj+=3;
             System.out.println();
@@ -116,13 +124,13 @@ public class UltimateBoard {
                 for(j=1; j<4; j++){
                 	System.out.print( boards.get(i).getBoardCharAt(j+contj) + " ");
                 }
-                if(j%3!=0)
-                	System.out.print(" | ");
+                if(j%3!=0)	System.out.print(" | ");
             }
             contj+=3;
             System.out.println();
             conti++;
         }
+        
         System.out.println( "---------------------------------");
 
         conti=0;
@@ -133,8 +141,7 @@ public class UltimateBoard {
                 for(j=1; j<4; j++){
                 	System.out.print( boards.get(i).getBoardCharAt(j+contj) + " ");
                 }
-                if(j%3!=0)
-                	System.out.print(" | ");
+                if(j%3!=0)	System.out.print(" | ");
             }
             contj+=3;
             System.out.println();
