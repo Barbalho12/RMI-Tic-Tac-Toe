@@ -66,8 +66,8 @@ public class BasicBoard implements IBoard{
 	    int chkT = check_two();
 	    int chkO = check_one();
 
-	    // Sum both values and change the return signal
-	    this.heuristic = -(chkT + chkO);
+	    // Sum both values 
+	    this.heuristic = chkT + chkO;
 
 	    return this.heuristic;
 	}
@@ -76,8 +76,6 @@ public class BasicBoard implements IBoard{
 	 * Verifies if someone won the game
 	 * @return 1 if the X player won, else -1 if the player O won
 	 */
-	
-	
 	public int check_win(){
 	
 		int XXX = X+X+X;
@@ -136,7 +134,7 @@ public class BasicBoard implements IBoard{
 	
 	/**
 	 * Verifies if someone is almost winning (2 spots filled in a roll)
-	 * @return -10 if it is the X, else 10 if it is the O 
+	 * @return 10 if it is the X, else -10 if it is the O 
 	 */
 	public int check_two(){
 	    int sum = 0;
@@ -146,141 +144,43 @@ public class BasicBoard implements IBoard{
 	    final int XXE = X+X+E;
 	    
 		/* Line Check*/
-	    if (board[1] + board[2] + board[3] == XXE)  sum += -10; 
-	    if (board[4] + board[5] + board[6] == XXE)  sum += -10;
-	    if (board[7] + board[8] + board[9] == XXE)  sum += -10;
+	    if (board[1] + board[2] + board[3] == XXE)  sum += 10; 
+	    if (board[4] + board[5] + board[6] == XXE)  sum += 10;
+	    if (board[7] + board[8] + board[9] == XXE)  sum += 10;
 	      
 	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == XXE)  sum += -10;
-	    if (board[2] + board[5] + board[8] == XXE)  sum += -10;
-	    if (board[3] + board[6] + board[9] == XXE)  sum += -10;
+	    if (board[1] + board[4] + board[7] == XXE)  sum += 10;
+	    if (board[2] + board[5] + board[8] == XXE)  sum += 10;
+	    if (board[3] + board[6] + board[9] == XXE)  sum += 10;
 	       
 	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == XXE)  sum += -10;
-	    if (board[3] + board[5] + board[7] == XXE)	sum += -10;
+	    if (board[1] + board[5] + board[9] == XXE)  sum += 10;
+	    if (board[3] + board[5] + board[7] == XXE)	sum += 10;
 	    
 	    /* Good states for O */
 	    
 	    final int OOE = O+O+E;
 	    
 	    /* Line Check*/
-	    if (board[1] + board[2] + board[3] == OOE)  sum += 10; 
-	    if (board[4] + board[5] + board[6] == OOE)  sum += 10;
-	    if (board[7] + board[8] + board[9] == OOE)  sum += 10;
+	    if (board[1] + board[2] + board[3] == OOE)  sum += -10; 
+	    if (board[4] + board[5] + board[6] == OOE)  sum += -10;
+	    if (board[7] + board[8] + board[9] == OOE)  sum += -10;
 	      
 	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == OOE)  sum += 10;
-	    if (board[2] + board[5] + board[8] == OOE)  sum += 10;
-	    if (board[3] + board[6] + board[9] == OOE)  sum += 10;
+	    if (board[1] + board[4] + board[7] == OOE)  sum += -10;
+	    if (board[2] + board[5] + board[8] == OOE)  sum += -10;
+	    if (board[3] + board[6] + board[9] == OOE)  sum += -10;
 	       
 	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == OOE)  sum += 10;
-	    if (board[3] + board[5] + board[7] == OOE)	sum += 10;
-
-	    
-//	    if ((board[1] == E && board[2] == X && board[3] == X) ||
-//	        (board[1] == X && board[2] == E && board[3] == X) ||
-//	        (board[1] == X && board[2] == X && board[3] == E)){
-//	            sum += -10;
-//	    }
-//
-//	    if ((board[4] == E && board[5] == X && board[6] == X) ||
-//	        (board[4] == X && board[5] == E && board[6] == X) ||
-//	        (board[4] == X && board[5] == X && board[6] == E)){
-//	            sum += -10;
-//	    }
-//
-//	    if ((board[7] == E && board[8] == X && board[9] == X) ||
-//	        (board[7] == X && board[8] == E && board[9] == X) ||
-//	        (board[7] == X && board[8] == X && board[9] == E)){
-//	            sum += -10;
-//	    }
-
-//	    if ((board[1] == E && board[4] == X && board[7] == X) ||
-//	        (board[1] == X && board[4] == E && board[7] == X) ||
-//	        (board[1] == X && board[4] == X && board[7] == E)){
-//	            sum += -10;
-//	    }
-//
-//	    if ((board[2] == E && board[5] == X && board[8] == X) ||
-//	        (board[2] == X && board[5] == E && board[8] == X) ||
-//	        (board[2] == X && board[5] == X && board[8] == E)){
-//	            sum += -10;
-//	    }
-//
-//	    if ((board[3] == E && board[6] == X && board[9] == X) ||
-//	        (board[3] == X && board[6] == E && board[9] == X) ||
-//	        (board[3] == X && board[6] == X && board[9] == E)){
-//	            sum += -10;
-//	    }
-//
-//	    if ((board[1] == E && board[5] == X && board[9] == X) ||
-//	        (board[1] == X && board[5] == E && board[9] == X) ||
-//	        (board[1] == X && board[5] == X && board[9] == E)){
-//	            sum += -10;
-//	    }
-//
-//	    if ((board[3] == E && board[5] == X && board[7] == X) ||
-//	        (board[3] == X && board[5] == E && board[7] == X) ||
-//	        (board[3] == X && board[5] == X && board[7] == E)){
-//	            sum += -10;
-//	    }
-
-	    //good states for O
-//	    if((board[1] == E && board[2] == O && board[3] == O) ||
-//	       (board[1] == O && board[2] == E && board[3] == O) ||
-//	       (board[1] == O && board[2] == O && board[3] == E)){
-//	            sum += 10;
-//	    }
-//
-//	    if ((board[4] == E && board[5] == O && board[6] == O) ||
-//	        (board[4] == O && board[5] == E && board[6] == O) ||
-//	        (board[4] == O && board[5] == O && board[6] == E)){
-//	            sum += 10;
-//	    }
-//
-//	    if ((board[7] == E && board[8] == O && board[9] == O) ||
-//	        (board[7] == O && board[8] == E && board[9] == O) ||
-//	        (board[7] == O && board[8] == O && board[9] == E)){
-//	            sum += 10;
-//	    }
-//
-//	    if ((board[1] == E && board[4] == O && board[7] == O) ||
-//	        (board[1] == O && board[4] == E && board[7] == O) ||
-//	        (board[1] == O && board[4] == O && board[7] == E)){
-//	            sum += 10;
-//	    }
-//
-//	    if ((board[2] == E && board[5] == O && board[8] == O) ||
-//	        (board[2] == O && board[5] == E && board[8] == O) ||
-//	        (board[2] == O && board[5] == O && board[8] == E)){
-//	            sum += 10;
-//	    }
-//
-//	    if ((board[3] == E && board[6] == O && board[9] == O) ||
-//	        (board[3] == O && board[6] == E && board[9] == O) ||
-//	        (board[3] == O && board[6] == O && board[9] == E)){
-//	            sum += 10;
-//	    }
-//
-//	    if ((board[1] == E && board[5] == O && board[9] == O) ||
-//	        (board[1] == O && board[5] == E && board[9] == O) ||
-//	        (board[1] == O && board[5] == O && board[9] == E)){
-//	            sum += 10;
-//	    }
-//
-//	   if ((board[3] == E && board[5] == O && board[7] == O) ||
-//	       (board[3] == O && board[5] == E && board[7] == O) ||
-//	       (board[3] == O && board[5] == O && board[7] == E)){
-//	           sum += 10;
-//	    }
+	    if (board[1] + board[5] + board[9] == OOE)  sum += -10;
+	    if (board[3] + board[5] + board[7] == OOE)	sum += -10;
 
 	   return sum;
 	}
 	
 	/**
 	 * Verifies if someone has a good start in a roll
-	 * @return -1 if it is the X, else 1 if it is the O 
+	 * @return 1 if it is the X, else -1 if it is the O 
 	 */
 	public int check_one(){
 	    
@@ -291,135 +191,37 @@ public class BasicBoard implements IBoard{
 	    final int EEX = E+E+X;
 	    
 	    /* Line Check*/
-	    if (board[1] + board[2] + board[3] == EEX)  sum += -1; 
-	    if (board[4] + board[5] + board[6] == EEX)  sum += -1;
-	    if (board[7] + board[8] + board[9] == EEX)  sum += -1;
+	    if (board[1] + board[2] + board[3] == EEX)  sum += 1; 
+	    if (board[4] + board[5] + board[6] == EEX)  sum += 1;
+	    if (board[7] + board[8] + board[9] == EEX)  sum += 1;
 	      
 	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == EEX)  sum += -1;
-	    if (board[2] + board[5] + board[8] == EEX)  sum += -1;
-	    if (board[3] + board[6] + board[9] == EEX)  sum += -1;
+	    if (board[1] + board[4] + board[7] == EEX)  sum += 1;
+	    if (board[2] + board[5] + board[8] == EEX)  sum += 1;
+	    if (board[3] + board[6] + board[9] == EEX)  sum += 1;
 	       
 	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == EEX)  sum += -1;
-	    if (board[3] + board[5] + board[7] == EEX)	sum += -1;
+	    if (board[1] + board[5] + board[9] == EEX)  sum += 1;
+	    if (board[3] + board[5] + board[7] == EEX)	sum += 1;
 	    
 	    /* Good states for O */
 	    
 	    final int EEO = E+E+O;
 	    
 	    /* Line Check*/
-	    if (board[1] + board[2] + board[3] == EEO)  sum += +1; 
-	    if (board[4] + board[5] + board[6] == EEO)  sum += +1;
-	    if (board[7] + board[8] + board[9] == EEO)  sum += +1;
+	    if (board[1] + board[2] + board[3] == EEO)  sum += -1; 
+	    if (board[4] + board[5] + board[6] == EEO)  sum += -1;
+	    if (board[7] + board[8] + board[9] == EEO)  sum += -1;
 	      
 	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == EEO)  sum += +1;
-	    if (board[2] + board[5] + board[8] == EEO)  sum += +1;
-	    if (board[3] + board[6] + board[9] == EEO)  sum += +1;
+	    if (board[1] + board[4] + board[7] == EEO)  sum += -1;
+	    if (board[2] + board[5] + board[8] == EEO)  sum += -1;
+	    if (board[3] + board[6] + board[9] == EEO)  sum += -1;
 	       
 	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == EEO)  sum += +1;
-	    if (board[3] + board[5] + board[7] == EEO)	sum += +1;
+	    if (board[1] + board[5] + board[9] == EEO)  sum += -1;
+	    if (board[3] + board[5] + board[7] == EEO)	sum += -1;
 
-
-//	    if ((board[1] == E && board[2] == E && board[3] == X) ||
-//	        (board[1] == X && board[2] == E && board[3] == E) ||
-//	        (board[1] == E && board[2] == X && board[3] == E)){
-//	            sum += -1;
-//	    }
-//
-//	    if ((board[4] == E && board[5] == E && board[6] == X) ||
-//	        (board[4] == X && board[5] == E && board[6] == E) ||
-//	        (board[4] == E && board[5] == X && board[6] == E)){
-//	            sum += -1;
-//	    }
-//
-//	    if ((board[7] == E && board[8] == E && board[9] == X) ||
-//	        (board[7] == X && board[8] == E && board[9] == E) ||
-//	        (board[7] == E && board[8] == X && board[9] == E)){
-//	            sum += -1;
-//	    }
-//
-//	    if ((board[1] == E && board[4] == E && board[7] == X) ||
-//	        (board[1] == X && board[4] == E && board[7] == E) ||
-//	        (board[1] == E && board[4] == X && board[7] == E)){
-//	            sum += -1;
-//	    }
-//
-//	    if ((board[2] == E && board[5] == E && board[8] == X) ||
-//	        (board[2] == X && board[5] == E && board[8] == E) ||
-//	        (board[2] == E && board[5] == X && board[8] == E)){
-//	            sum += -1;
-//	    }
-//
-//	    if ((board[3] == E && board[6] == E && board[9] == X) ||
-//	        (board[3] == X && board[6] == E && board[9] == E) ||
-//	        (board[3] == E && board[6] == X && board[9] == E)){
-//	            sum += -1;
-//	    }
-//
-//	    if ((board[1] == E && board[5] == E && board[9] == X) ||
-//	        (board[1] == X && board[5] == E && board[9] == E) ||
-//	        (board[1] == E && board[5] == X && board[9] == E)){
-//	            sum += -1;
-//	    }
-//
-//	    if ((board[3] == E && board[5] == E && board[7] == X) ||
-//	        (board[3] == X && board[5] == E && board[7] == E) ||
-//	        (board[3] == E && board[5] == X && board[7] == E)){
-//	            sum += -1;
-//	    }
-
-	    
-//	    if((board[1] == E && board[2] == E && board[3] == O) ||
-//	       (board[1] == O && board[2] == E && board[3] == E) ||
-//	       (board[1] == E && board[2] == O && board[3] == E)){
-//	            sum += 1;
-//	    }
-//
-//	    if ((board[4] == E && board[5] == E && board[6] == O) ||
-//	        (board[4] == O && board[5] == E && board[6] == E) ||
-//	        (board[4] == E && board[5] == O && board[6] == E)){
-//	            sum += 1;
-//	    }
-//
-//	    if ((board[7] == E && board[8] == E && board[9] == O) ||
-//	        (board[7] == O && board[8] == E && board[9] == E) ||
-//	        (board[7] == E && board[8] == O && board[9] == E)){
-//	            sum += 1;
-//	    }
-//
-//	    if ((board[1] == E && board[4] == E && board[7] == O) ||
-//	        (board[1] == O && board[4] == E && board[7] == E) ||
-//	        (board[1] == E && board[4] == O && board[7] == E)){
-//	            sum += 1;
-//	    }
-//
-//	    if ((board[2] == E && board[5] == E && board[8] == O) ||
-//	        (board[2] == O && board[5] == E && board[8] == E) ||
-//	        (board[2] == E && board[5] == O && board[8] == E)){
-//	            sum += 1;
-//	    }
-//
-//	    if ((board[3] == E && board[6] == E && board[9] == O) ||
-//	        (board[3] == O && board[6] == E && board[9] == E) ||
-//	        (board[3] == E && board[6] == O && board[9] == E)){
-//	            sum += 1;
-//	    }
-//
-//	    if ((board[1] == E && board[5] == E && board[9] == O) ||
-//	        (board[1] == O && board[5] == E && board[9] == E) ||
-//	        (board[1] == E && board[5] == O && board[9] == E)){
-//	            sum += 1;
-//	    }
-//
-//	   if ((board[3] == E && board[5] == E && board[7] == O) ||
-//	       (board[3] == O && board[5] == E && board[7] == E) ||
-//	       (board[3] == E && board[5] == O && board[7] == E)){
-//	           sum += 1;
-//	    }
-	    
 	   return sum;
 	}
 
