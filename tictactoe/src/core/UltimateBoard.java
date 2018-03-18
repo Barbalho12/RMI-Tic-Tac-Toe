@@ -169,10 +169,11 @@ public class UltimateBoard implements IBoard{
                 if(j%3!=0)	state += " | ";
             }
             contj+=3;
+            state += "\n";
             System.out.println();
             conti++;
         }
-        state += "---------------------------------";
+        state += "---------------------------------\n";
 
         conti=0;
         contj=0;
@@ -189,7 +190,7 @@ public class UltimateBoard implements IBoard{
             conti++;
         }
         
-        state += "---------------------------------";
+        state += "---------------------------------\n";
 
         conti=0;
         contj=0;

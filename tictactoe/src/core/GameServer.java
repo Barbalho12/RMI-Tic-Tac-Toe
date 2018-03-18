@@ -95,7 +95,7 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
 				return tab.getState() + message;
 			}
 			else 
-				return "Posição ou jogada inválida.\n";
+				return "Posicao ou jogada invalida.\n";
 		}
 		else if(p2.credential == credential ){
 
@@ -138,7 +138,7 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
 				return tab.getState() + message;
 			}
 			else
-				return "Posição ou jogada inválida.\n";
+				return "Posicao ou jogada invalida.\n";
 		}
 
 		if (countPlays == 82) {
@@ -156,11 +156,14 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
 		// If this is the first turn or the current board is invalid
         if (board == 0 || !tab.at(board).isValid())
         	return false;
+        
+        if (board <= 0 || board >= 10 || position <= 0 || position >= 10)
+        	return false;
 	
-        if (player.equals(p1) && board != p2.choosenPosition)
+        if (p2.choosenPosition != 0 && player.equals(p1) && board != p2.choosenPosition &&  tab.at(p2.choosenPosition).isValid())
         	return false;
         
-        if (player.equals(p2) && board != p1.choosenPosition)
+        if (p1.choosenPosition != 0 && player.equals(p2) && board != p1.choosenPosition &&  tab.at(p1.choosenPosition).isValid())
         	return false;
         
         // if the position is already occupied
@@ -177,10 +180,11 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
         if (boardchk == 1 || boardchk == -1){
             tab.at(player.choosenBoard).setValid(false);
             tab.at(player.choosenBoard).setWinner(player.playerName);
-            
+                        
             return GameStatus.BOARD_WIN;
         }
-        else if (tab.at(player.choosenBoard).check_draw() == 1) {	    	
+        else if (tab.at(player.choosenBoard).check_draw() == 1) {	
+        	            
             return GameStatus.BOARD_DRAW;
 	    }
         
