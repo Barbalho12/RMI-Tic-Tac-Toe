@@ -1,7 +1,5 @@
 package core;
 
-import java.util.Scanner;
-
 import java.rmi.*;
 import java.rmi.server.*;
 
@@ -97,7 +95,7 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
 				return tab.getState() + message;
 			}
 			else 
-				return "PosiÁ„o ou jogada inv·lida.\n";
+				return "Posi√ß√£o ou jogada inv√°lida.\n";
 		}
 		else if(p2.credential == credential ){
 
@@ -140,7 +138,7 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
 				return tab.getState() + message;
 			}
 			else
-				return "PosiÁ„o ou jogada inv·lida.\n";
+				return "Posi√ß√£o ou jogada inv√°lida.\n";
 		}
 
 		if (countPlays == 82) {
@@ -206,7 +204,7 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
 			// Criando o objeto remoto
 			GameServer game = new GameServer();
 			
-			// Registrando esse objeto no serviÁo de nomes
+			// Registrando esse objeto no servi√ßo de nomes
 			Naming.bind("Game", game);
             
 		} catch (RemoteException e) {
