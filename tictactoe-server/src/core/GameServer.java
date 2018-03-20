@@ -1,6 +1,8 @@
 package core;
 
 import java.rmi.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.*;
 
 public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
@@ -200,22 +202,61 @@ public class GameServer extends UnicastRemoteObject implements IGame, IBoard{
         return GameStatus.NORMAL;		
 	}
 	
-
-
-	public static void main (String args[]) throws AlreadyBoundException, java.net.MalformedURLException{
+	
+	public static void main (String args[]) {
 		try {
-            
-			// Criando o objeto remoto
-			GameServer game = new GameServer();
 			
-			// Registrando esse objeto no serviço de nomes
-			Naming.bind("Game", game);
-            
+			String ip = "localhost";
+			int port = 1099;
+			String name = "Game";
+			
+			if(args.length > 0) {
+				ip = args[0];
+			}
+			if(args.length > 1) {
+				port = Integer.parseInt(args[1]);
+			}
+			
+			String address = "rmi://"+ip+":"+port+"/"+name;
+			System.out.println(address);
+
+			// Criando o objeto remoto
+			IGame game = new GameServer(); 
+
+			System.setProperty("java.rmi.server.hostname",ip);
+
+            // Bind the remote object's stub in the registry
+            Registry registry = LocateRegistry.createRegistry(port);
+            registry.rebind(address, game);
+
 		} catch (RemoteException e) {
 			System.err.println("Server exception: " + e.toString());
 			e.printStackTrace();
 		}
 	}
+	
+
+
+//	public static void main (String args[]) throws AlreadyBoundException, java.net.MalformedURLException{
+//		try {
+//			String ip = "";
+////			if(args.length > 0)
+////				ip = "rmi://"+args[0]+":1099/";
+//			
+//			// Criando o objeto remoto
+//			GameServer game = new GameServer();
+//			
+//			
+//			// Registrando esse objeto no serviço de nomes
+//			System.out.println("Game");
+//			Naming.bind("Game", game);
+//			System.setProperty("java.rmi.server.hostname","192.168.0.102");
+//            
+//		} catch (RemoteException e) {
+//			System.err.println("Server exception: " + e.toString());
+//			e.printStackTrace();
+//		}
+//	}
 
 
 

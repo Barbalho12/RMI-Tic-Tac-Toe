@@ -4,15 +4,32 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class GameClient {
 	
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
-        
+		
+		String ip = "localhost";
+		int port = 1099;
+		String name = "Game";
+		
+		if(args.length > 0) {
+			ip = args[0];
+		}
+		if(args.length > 1) {
+			port = Integer.parseInt(args[1]);
+		}
+		
+		String address = "rmi://"+ip+":"+port+"/"+name;
+		System.out.println(address);
+		
+		Registry reg = LocateRegistry.getRegistry(ip,port);
+		
 		// Recuperando o objeto remoto via o servidor de nomes
-		IGame game = (IGame) Naming.lookup("Game");
+		IGame game = (IGame) reg.lookup(address);
 
 		int credential = game.getCredential();
 
