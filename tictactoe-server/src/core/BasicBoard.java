@@ -38,39 +38,39 @@ public class BasicBoard implements IBoard{
 	    System.out.println();
 	}
 	
-	/**
-	 * Generate a heuristic value for the board state
-	 * 
-	 * the heuristic is based on the minmax tradeoff 
-	 * the O (AI) tries to minimize and the X (player) tries to maximize the value
-	 * 
-	 * @return heuristic value in int
-	 */
-	public int check_heuristic(){
-
-	    // Sets back to 0 to recalculate
-	    this.heuristic = 0;
-
-	    int chkW = check_win();
-
-	    if(chkW == 1){
-	       this.heuristic = 100;
-	        return 100;
-	    }
-	    else if (chkW == -1){
-	        this.heuristic = -100;
-	        return -100;
-	    }
-
-	    // If nobody won, sum all the heuristics of the lines
-	    int chkT = check_two();
-	    int chkO = check_one();
-
-	    // Sum both values 
-	    this.heuristic = chkT + chkO;
-
-	    return this.heuristic;
-	}
+//	/**
+//	 * Generate a heuristic value for the board state
+//	 * 
+//	 * the heuristic is based on the minmax tradeoff 
+//	 * the O (AI) tries to minimize and the X (player) tries to maximize the value
+//	 * 
+//	 * @return heuristic value in int
+//	 */
+//	public int check_heuristic(){
+//
+//	    // Sets back to 0 to recalculate
+//	    this.heuristic = 0;
+//
+//	    int chkW = check_win();
+//
+//	    if(chkW == 1){
+//	       this.heuristic = 100;
+//	        return 100;
+//	    }
+//	    else if (chkW == -1){
+//	        this.heuristic = -100;
+//	        return -100;
+//	    }
+//
+//	    // If nobody won, sum all the heuristics of the lines
+//	    int chkT = check_two();
+//	    int chkO = check_one();
+//
+//	    // Sum both values 
+//	    this.heuristic = chkT + chkO;
+//
+//	    return this.heuristic;
+//	}
 
 	/**
 	 * Verifies if someone won the game
@@ -132,98 +132,98 @@ public class BasicBoard implements IBoard{
 	    }
 	}
 	
-	/**
-	 * Verifies if someone is almost winning (2 spots filled in a roll)
-	 * @return 10 if it is the X, else -10 if it is the O 
-	 */
-	public int check_two(){
-	    int sum = 0;
-	    
-	    /* Good states for X */
-	    
-	    final int XXE = X+X+E;
-	    
-		/* Line Check*/
-	    if (board[1] + board[2] + board[3] == XXE)  sum += 10; 
-	    if (board[4] + board[5] + board[6] == XXE)  sum += 10;
-	    if (board[7] + board[8] + board[9] == XXE)  sum += 10;
-	      
-	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == XXE)  sum += 10;
-	    if (board[2] + board[5] + board[8] == XXE)  sum += 10;
-	    if (board[3] + board[6] + board[9] == XXE)  sum += 10;
-	       
-	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == XXE)  sum += 10;
-	    if (board[3] + board[5] + board[7] == XXE)	sum += 10;
-	    
-	    /* Good states for O */
-	    
-	    final int OOE = O+O+E;
-	    
-	    /* Line Check*/
-	    if (board[1] + board[2] + board[3] == OOE)  sum += -10; 
-	    if (board[4] + board[5] + board[6] == OOE)  sum += -10;
-	    if (board[7] + board[8] + board[9] == OOE)  sum += -10;
-	      
-	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == OOE)  sum += -10;
-	    if (board[2] + board[5] + board[8] == OOE)  sum += -10;
-	    if (board[3] + board[6] + board[9] == OOE)  sum += -10;
-	       
-	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == OOE)  sum += -10;
-	    if (board[3] + board[5] + board[7] == OOE)	sum += -10;
-
-	   return sum;
-	}
-	
-	/**
-	 * Verifies if someone has a good start in a roll
-	 * @return 1 if it is the X, else -1 if it is the O 
-	 */
-	public int check_one(){
-	    
-		int sum = 0;
-	    
-	    /* Good states for X */
-	    
-	    final int EEX = E+E+X;
-	    
-	    /* Line Check*/
-	    if (board[1] + board[2] + board[3] == EEX)  sum += 1; 
-	    if (board[4] + board[5] + board[6] == EEX)  sum += 1;
-	    if (board[7] + board[8] + board[9] == EEX)  sum += 1;
-	      
-	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == EEX)  sum += 1;
-	    if (board[2] + board[5] + board[8] == EEX)  sum += 1;
-	    if (board[3] + board[6] + board[9] == EEX)  sum += 1;
-	       
-	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == EEX)  sum += 1;
-	    if (board[3] + board[5] + board[7] == EEX)	sum += 1;
-	    
-	    /* Good states for O */
-	    
-	    final int EEO = E+E+O;
-	    
-	    /* Line Check*/
-	    if (board[1] + board[2] + board[3] == EEO)  sum += -1; 
-	    if (board[4] + board[5] + board[6] == EEO)  sum += -1;
-	    if (board[7] + board[8] + board[9] == EEO)  sum += -1;
-	      
-	    /* Column Check*/
-	    if (board[1] + board[4] + board[7] == EEO)  sum += -1;
-	    if (board[2] + board[5] + board[8] == EEO)  sum += -1;
-	    if (board[3] + board[6] + board[9] == EEO)  sum += -1;
-	       
-	    /* Diagonal Check*/
-	    if (board[1] + board[5] + board[9] == EEO)  sum += -1;
-	    if (board[3] + board[5] + board[7] == EEO)	sum += -1;
-
-	   return sum;
-	}
+//	/**
+//	 * Verifies if someone is almost winning (2 spots filled in a roll)
+//	 * @return 10 if it is the X, else -10 if it is the O 
+//	 */
+//	public int check_two(){
+//	    int sum = 0;
+//	    
+//	    /* Good states for X */
+//	    
+//	    final int XXE = X+X+E;
+//	    
+//		/* Line Check*/
+//	    if (board[1] + board[2] + board[3] == XXE)  sum += 10; 
+//	    if (board[4] + board[5] + board[6] == XXE)  sum += 10;
+//	    if (board[7] + board[8] + board[9] == XXE)  sum += 10;
+//	      
+//	    /* Column Check*/
+//	    if (board[1] + board[4] + board[7] == XXE)  sum += 10;
+//	    if (board[2] + board[5] + board[8] == XXE)  sum += 10;
+//	    if (board[3] + board[6] + board[9] == XXE)  sum += 10;
+//	       
+//	    /* Diagonal Check*/
+//	    if (board[1] + board[5] + board[9] == XXE)  sum += 10;
+//	    if (board[3] + board[5] + board[7] == XXE)	sum += 10;
+//	    
+//	    /* Good states for O */
+//	    
+//	    final int OOE = O+O+E;
+//	    
+//	    /* Line Check*/
+//	    if (board[1] + board[2] + board[3] == OOE)  sum += -10; 
+//	    if (board[4] + board[5] + board[6] == OOE)  sum += -10;
+//	    if (board[7] + board[8] + board[9] == OOE)  sum += -10;
+//	      
+//	    /* Column Check*/
+//	    if (board[1] + board[4] + board[7] == OOE)  sum += -10;
+//	    if (board[2] + board[5] + board[8] == OOE)  sum += -10;
+//	    if (board[3] + board[6] + board[9] == OOE)  sum += -10;
+//	       
+//	    /* Diagonal Check*/
+//	    if (board[1] + board[5] + board[9] == OOE)  sum += -10;
+//	    if (board[3] + board[5] + board[7] == OOE)	sum += -10;
+//
+//	   return sum;
+//	}
+//	
+//	/**
+//	 * Verifies if someone has a good start in a roll
+//	 * @return 1 if it is the X, else -1 if it is the O 
+//	 */
+//	public int check_one(){
+//	    
+//		int sum = 0;
+//	    
+//	    /* Good states for X */
+//	    
+//	    final int EEX = E+E+X;
+//	    
+//	    /* Line Check*/
+//	    if (board[1] + board[2] + board[3] == EEX)  sum += 1; 
+//	    if (board[4] + board[5] + board[6] == EEX)  sum += 1;
+//	    if (board[7] + board[8] + board[9] == EEX)  sum += 1;
+//	      
+//	    /* Column Check*/
+//	    if (board[1] + board[4] + board[7] == EEX)  sum += 1;
+//	    if (board[2] + board[5] + board[8] == EEX)  sum += 1;
+//	    if (board[3] + board[6] + board[9] == EEX)  sum += 1;
+//	       
+//	    /* Diagonal Check*/
+//	    if (board[1] + board[5] + board[9] == EEX)  sum += 1;
+//	    if (board[3] + board[5] + board[7] == EEX)	sum += 1;
+//	    
+//	    /* Good states for O */
+//	    
+//	    final int EEO = E+E+O;
+//	    
+//	    /* Line Check*/
+//	    if (board[1] + board[2] + board[3] == EEO)  sum += -1; 
+//	    if (board[4] + board[5] + board[6] == EEO)  sum += -1;
+//	    if (board[7] + board[8] + board[9] == EEO)  sum += -1;
+//	      
+//	    /* Column Check*/
+//	    if (board[1] + board[4] + board[7] == EEO)  sum += -1;
+//	    if (board[2] + board[5] + board[8] == EEO)  sum += -1;
+//	    if (board[3] + board[6] + board[9] == EEO)  sum += -1;
+//	       
+//	    /* Diagonal Check*/
+//	    if (board[1] + board[5] + board[9] == EEO)  sum += -1;
+//	    if (board[3] + board[5] + board[7] == EEO)	sum += -1;
+//
+//	   return sum;
+//	}
 
 	public char getWinner() {
 		return winner;
