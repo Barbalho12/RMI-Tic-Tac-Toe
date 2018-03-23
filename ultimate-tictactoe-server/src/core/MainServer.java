@@ -25,10 +25,8 @@ public class MainServer {
 
 	public static void main (String args[]) {
 		
-		try {
-			
-			tryReadArgs(args);
-			
+		try {			
+			tryReadArgs(args);			
 			
 			String address = "rmi://"+ip+":"+port+"/"+NAME;
 			

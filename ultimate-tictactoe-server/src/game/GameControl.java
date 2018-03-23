@@ -9,6 +9,7 @@ import enums.GameStatus;
 
 import interfaces.IBoard;
 import interfaces.IGame;
+import interfaces.IPlayer;
 
 public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 
@@ -56,6 +57,22 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		}
 		return tab.getState();
 	}
+	
+	private String generateMessage(GameStatus status, IPlayer player) throws RemoteException {
+
+		switch (status) {
+		case BOARD_DRAW: 
+			return "\nDeu Velha!\n";
+		case GAME_DRAW:
+			return "\nDeu Velha!\n";
+		case BOARD_WIN:
+			return "\nJogador " + player.getName() + " venceu o tabuleiro " + player.getBoard() + "!\n";
+		case GAME_WIN:
+			return "\nJogador " + player.getName() + " venceu o jogo!\n";
+		default:
+	}
+		return "";
+	}
 
 	public String play(int credential, int board, int position) throws RemoteException {
 		
@@ -70,40 +87,26 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 			if (checkValidPlay( p1, board, position)) {
 				tab.at(board).setBoardCharAt(position, p1.getName());		
 				
+				// Allow the p1 to make the movement
 				p1.play(board, position);
 				
+				// Change the turn
 				p1.setBlocked(true);
-				p2.setBlocked(false);
-	
+				p2.setBlocked(false);			
+				
+				// Get the current status of the game after the play
+				GameStatus status = checkGame(p1);
+				String message =  generateMessage(status, p1);				
+
+				//sum the moves count
+				countPlays++;
+
 				while(p1.isBlocked()){
 					try {
 	                    Thread.sleep(1000);
 	                } catch (InterruptedException e) {}
 				}
 				
-				
-				GameStatus status = checkGame(p1);
-				String message = "";
-				
-				switch (status) {
-					case BOARD_DRAW: 
-						message = "\nDeu Velha!\n";
-						break;
-					case GAME_DRAW:
-						message = "\nDeu Velha!\n";
-						break;
-					case BOARD_WIN:
-						message = "\nJogador " + p1.getName() + " venceu o tabuleiro " + p1.getBoard() + "!\n";
-						break;
-					case GAME_WIN:
-						message = "\nJogador " + p1.getName() + " venceu o jogo!\n";
-						break;
-					default:
-				}
-
-				//sum the moves count
-				countPlays++;
-					
 				return tab.getState() + message;
 			}
 			else 
@@ -113,40 +116,28 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		else if(p2.getId() == credential ){
 
 			if (checkValidPlay( p2, board, position)) {
-				tab.at(board).setBoardCharAt(position, p2.getName());
-
+				tab.at(board).setBoardCharAt(position, p2.getName());		
+				
+				// Allow the p1 to make the movement
 				p2.play(board, position);
+				
+				// Change the turn
 				p2.setBlocked(true);
-				p1.setBlocked(false);
-	
+				p1.setBlocked(false);			
+				
+				// Get the current status of the game after the play
+				GameStatus status = checkGame(p2);
+				String message =  generateMessage(status, p2);				
+
+				//sum the moves count
+				countPlays++;
+
 				while(p2.isBlocked()){
 					try {
 	                    Thread.sleep(1000);
 	                } catch (InterruptedException e) {}
-				}		
-				
-				GameStatus status = checkGame(p2);				
-				String message = "";
-				
-				switch (status) {
-					case BOARD_DRAW: 
-						message = "\nDeu Velha!\n";
-						break;
-					case GAME_DRAW:
-						message = "\nDeu Velha!\n";
-						break;
-					case BOARD_WIN:
-						message = "\nJogador "+ p2.getName() +" venceu o tabuleiro " + p2.getBoard() + "!\n";
-						break;
-					case GAME_WIN:
-						message = "\nJogador " + p2.getName() + " venceu o jogo!\n";
-						break;
-					default:
 				}
 				
-				//sum the moves count
-				countPlays++;
-					
 				return tab.getState() + message;
 			}
 			else
@@ -155,14 +146,12 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 
 		// If the total number of possible moves was achieved
 		if (countPlays >= 82) {
-			endGame = true;
-			
+			endGame = true;			
 			return "O jogo acabou.\n";
-		}
-				
+		}				
 		return "ERROR";
 	}
-
+	
 	public int getCredential() throws RemoteException {
 		return ++countCredentials;
 	}
@@ -174,24 +163,16 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
         
         if (board <= 0 || board >= 10 || position <= 0 || position >= 10)
         	return false;
-	
-        if (player.equals(p1) && p2.getPosition() != 0 && board != p2.getPosition())
-        	return false;
+                	
+        if (p2.getPosition() != 0 && tab.at(p2.getPosition()).isValid()) {
+	        if (player.equals(p1) && board != p2.getPosition())
+	        	return false;
+        }
         
-        if (player.equals(p2) && p1.getPosition() != 0 && board != p1.getPosition())
-        	return false;
-        
-        if (player.equals(p1) && p2.getPosition() != 0 && !tab.at(p2.getPosition()).isValid())
-        	return false;
-        
-        if (player.equals(p2) && p1.getPosition() != 0 && !tab.at(p1.getPosition()).isValid())
-        	return false;
-        
-        if (player.equals(p1) && p2.getPosition() != 0 && !tab.at(p2.getPosition()).isValid() && board != p2.getPosition())
-        	return false;
-        
-        if (player.equals(p2) && p1.getPosition() != 0 && !tab.at(p1.getPosition()).isValid() && board != p1.getPosition())
-        	return false;
+        if (p1.getPosition() != 0 && tab.at(p1.getPosition()).isValid()) {
+	        if (player.equals(p2) && board != p1.getPosition())
+	        	return false;
+        }
         
         // if the position is already occupied
         if (tab.at(board).getBoardCharAt(position) != E) 
@@ -201,6 +182,19 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 	}
 	
 	private GameStatus checkGame (Player player) throws RemoteException{		
+		int chktable = tab.check_win();
+        
+        if(chktable == 1 || chktable == -1){
+        	endGame = true;
+        	
+            return GameStatus.GAME_WIN;
+        }
+        else if(tab.check_draw() == 1){
+        	endGame = true;
+        	
+            return GameStatus.GAME_DRAW;
+        }
+		
 		// verify if someone won the current board
         int boardchk = tab.at(player.getBoard()).check_win();
       
@@ -215,19 +209,6 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
         	            
             return GameStatus.BOARD_DRAW;
 	    }
-        
-        int chktable = tab.check_win();
-        
-        if(chktable == 1 || chktable == -1){
-        	endGame = true;
-        	
-            return GameStatus.GAME_WIN;
-        }
-        else if(tab.check_draw() == 1){
-        	endGame = true;
-        	
-            return GameStatus.GAME_DRAW;
-        }
 
         return GameStatus.NORMAL;		
 	}
