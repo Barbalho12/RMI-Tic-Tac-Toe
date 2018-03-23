@@ -241,7 +241,7 @@ public class BasicBoard implements IBoard{
 	}
 
 	public boolean isValid() {
-		this.check_draw();
+		// this.check_draw();
 		return valid;
 	}
 
