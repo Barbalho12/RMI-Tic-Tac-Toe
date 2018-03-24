@@ -36,7 +36,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		super();
 	}
 	
-	public String init(IPlayer player, GameOptions option) throws RemoteException {
+	public GameResponse init(IPlayer player, GameOptions option) throws RemoteException {
 		this.option = option;
 		
 		switch (option) {
@@ -46,7 +46,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 				p2 = new AIPlayer();
 				return initAI(player);
 			default:
-				return "ERROR";
+				return new GameResponseImpl(null, null, "ERROR");
 		}
 	}
 		
@@ -63,7 +63,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		}
 	}
 
-	private String initNormal(IPlayer player) throws RemoteException {
+	private GameResponse initNormal(IPlayer player) throws RemoteException {
 		// First player
 		if(p1 == null){ 
 			p1 = player;
@@ -88,10 +88,11 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
                 }
 			}	    
 		}
-		return tab.getState();
+		return getScopeWithtab("");
+		
 	}
 	
-	private String initAI(IPlayer player) throws RemoteException {
+	private GameResponse initAI(IPlayer player) throws RemoteException {
 		// First player
 		if(p1 == null){ 
 			p1 = player;
@@ -101,7 +102,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 			p2 = new AIPlayer();
 			p2.init(this.getCredential(), O, true);
 		} 
-		return tab.getState();
+		return getScopeWithtab("");
 	}
 	
 //	private GameResponse getScope(String msg){

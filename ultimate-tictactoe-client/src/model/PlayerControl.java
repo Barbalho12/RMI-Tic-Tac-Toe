@@ -25,13 +25,18 @@ public class PlayerControl {
         	option = scanIn.nextInt();
         }
         
-		String msg = game.init(player, GameOptions.values()[option]);
+        GameResponse msg = game.init(player, GameOptions.values()[option]);
 
 		System.out.print("\nTutorial> Digite 2 números separados por um espaço.\n");
 		System.out.print("Tutorial> O 1º é a posição no tabuleiro externo.\n");
 		System.out.println("Tutorial> O 2º é a posição no tabuleiro interno.\n");
 
-		System.out.println(msg);
+		if(msg.getSettings() != null)
+        	printState(msg.getSettings());
+        if(msg.getMessage() != null)
+        	System.out.println(msg.getMessage());
+        else if(msg.getAlert() != null)
+        	System.err.println(msg.getAlert());
 
 
 		while (true){

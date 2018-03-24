@@ -99,9 +99,9 @@ public class TabHandler {
 			
 		}
 		if(response.getMessage() != null){
-			JOptionPane.showMessageDialog(null, response.getMessage());
+			JOptionPane.showMessageDialog(null, response.getMessage(), "Message", JOptionPane.INFORMATION_MESSAGE);
 		}else if(response.getAlert() != null){
-			JOptionPane.showMessageDialog(null, response.getMessage(),"Alert", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, response.getAlert(),"Alert", JOptionPane.WARNING_MESSAGE);
 		}
 		
 		
@@ -135,7 +135,36 @@ public class TabHandler {
 			
 			player = new Player();
 			
-			String msg = game.init(player, GameOptions.values()[0]);
+			GameResponse response = game.init(player, GameOptions.values()[0]);
+//			updateButtons(response);
+			
+			
+			
+			Runnable run = new Runnable() {
+				
+				@Override
+				public void run() {
+					while(allpane == null){
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					try {
+						updateButtons(response);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+			};
+			Thread t = new Thread(run);
+			t.start();
+			System.out.println("Aqui");
+		
 			
 			
 		} catch (RemoteException e) {
@@ -144,6 +173,8 @@ public class TabHandler {
 		}	
 	
 	}
+	
+	
 	
 	public void execute(IGame game) throws RemoteException  {
 //		scanIn = new Scanner(System.in);		
@@ -176,6 +207,9 @@ public class TabHandler {
 //		}
 
 	}
+	
+	
+	
 	
 	
 	@FXML
