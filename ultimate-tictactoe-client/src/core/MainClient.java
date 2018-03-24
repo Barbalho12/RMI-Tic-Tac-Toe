@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import interfaces.IGame;
 import interfaces.IPlayer;
+
 import model.PlayerControl;
 
 import java.rmi.RemoteException;
@@ -18,7 +19,7 @@ public class MainClient {
 	static String ip = "localhost";
 	static int port = 1099;
 	static final String NAME = "Game";
-	
+		
 	static void tryReadArgs(String args[]){
 		if(args.length > 0) {
 			ip = args[0];
@@ -32,8 +33,7 @@ public class MainClient {
 				
 		try {
 			
-			tryReadArgs(args);
-			
+			tryReadArgs(args);			
 			
 			String address = "rmi://"+ip+":"+port+"/"+NAME;
 			

@@ -106,6 +106,7 @@ public class UltimateBoard implements IBoard{
 
         while(conti!=3){
             for(i=1; i<4; i++){
+            	System.out.print("  ");
                 for(j=1; j<4; j++){
                     System.out.print(boards.get(i).getBoardCharAt(j+contj) + " ");
                 }
@@ -115,13 +116,14 @@ public class UltimateBoard implements IBoard{
             System.out.println();
             conti++;
         }
-        System.out.println( "---------------------------------");
+        System.out.println( "-------------------------------");
 
         conti=0;
         contj=0;
 
         while(conti!=3){
             for(i=4; i<7; i++){
+            	System.out.print("  ");
                 for(j=1; j<4; j++){
                 	System.out.print( boards.get(i).getBoardCharAt(j+contj) + " ");
                 }
@@ -132,13 +134,14 @@ public class UltimateBoard implements IBoard{
             conti++;
         }
         
-        System.out.println( "---------------------------------");
+        System.out.println( "-------------------------------");
 
         conti=0;
         contj=0;
 
         while(conti!=3){
             for(i=7; i<10; i++){
+            	System.out.print("  ");
                 for(j=1; j<4; j++){
                 	System.out.print( boards.get(i).getBoardCharAt(j+contj) + " ");
                 }

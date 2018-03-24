@@ -17,7 +17,7 @@ public class AlphaBetaPruning  implements IBoard{
 	 * 
 	 * @return the number of the valid board
 	 */
-	public int findK(UltimateBoard tab, int k, int player){
+	public static int findK(UltimateBoard tab, int k, int player){
 	    int tempk = k;
 	    int htemp;
 	    
@@ -66,7 +66,7 @@ public class AlphaBetaPruning  implements IBoard{
 	 * 
 	 * @return the best move heuristic
 	 */
-	public int alphabeta(int boardnum, int depth, int a, int b, int player, UltimateBoard tab, int profundidade){
+	public static int alphabeta(int boardnum, int depth, int a, int b, int player, UltimateBoard tab, int profundidade){
 	    int aux;
 
 	    //base case
@@ -164,7 +164,7 @@ public class AlphaBetaPruning  implements IBoard{
 	 * 
 	 * @return heuristic value in int
 	 */
-	public int check_heuristic(BasicBoard bboard){
+	public static int check_heuristic(BasicBoard bboard){
 
 	    // Sets back to 0 to recalculate
 		bboard.setHeuristic(0);
@@ -195,7 +195,7 @@ public class AlphaBetaPruning  implements IBoard{
 	 * Verifies if someone is almost winning (2 spots filled in a roll)
 	 * @return 10 if it is the X, else -10 if it is the O 
 	 */
-	public int check_two(BasicBoard bboard){
+	public static int check_two(BasicBoard bboard){
 	    int sum = 0;
 	    
 	    /* Good states for X */
@@ -241,7 +241,7 @@ public class AlphaBetaPruning  implements IBoard{
 	 * Verifies if someone has a good start in a roll
 	 * @return 1 if it is the X, else -1 if it is the O 
 	 */
-	public int check_one(BasicBoard bboard){
+	public static int check_one(BasicBoard bboard){
 	    
 		int sum = 0;
 	    
