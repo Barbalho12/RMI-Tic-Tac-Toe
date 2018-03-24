@@ -1,12 +1,10 @@
 package game;
 
 import java.rmi.*;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.*;
 
 import ai.AIPlayer;
-import ai.AlphaBetaPruning;
+
 import enums.GameOptions;
 import enums.GameStatus;
 
@@ -22,6 +20,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
     
 	private IPlayer p1 = null;
 	private IPlayer p2 = null;  
+	private AIPlayer ai = null;
 
 	private boolean endGame = false;
 	
@@ -42,7 +41,6 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 			case NORMAL: 
 				return initNormal(player);
 			case AI:
-				p2 = new AIPlayer();
 				return initAI(player);
 			default:
 				return "ERROR";
@@ -95,17 +93,22 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 			p1.init(this.getCredential(), X, false);
 			
 			// AI player
-			p2 = new AIPlayer();
-			p2.init(this.getCredential(), O, true);
+			ai = new AIPlayer();
+			ai.init(this.getCredential(), O, true);
 		} 
 		return tab.getState();
 	}
 			
 	private String playNormal(IPlayer player, int board, int position) throws RemoteException {
+		if(tab.check_win() != 0)
+			endGame = true;        	
+        else if(tab.check_draw() == 1)
+        	endGame = true;
+        
 		// If the game already ended
-		if (endGame) {
+		if (endGame) 
 			return "O jogo acabou.\n";
-		}
+		
 		// if this is the player 1
 		else if(p1.getId() == player.getId()){
 						
@@ -137,19 +140,22 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		else if(p1.getId() == player.getId()){
 						
 			// If the movement is valid
-			if (GameCheck.checkValidPlay(p1, board, position, tab, p1, p2)) {
+			if (GameCheck.checkValidPlay(p1, board, position, tab, p1, ai)) {
 				// Make the p1 movement
-				makePlay(p1, board, position, p2);
+				makePlay(p1, board, position, ai);
+
+				// Get the current status of the game after the play
+				GameStatus status = GameCheck.checkGame(player, tab, endGame);
 				
 				// make the AI movement
-				player.play(board, position);
+				ai.makePlay(tab, board, position);
 				
 				// Change the turn back to the player
-				p2.setBlocked(true);
+				ai.setBlocked(true);
 				p1.setBlocked(false);	
 				
 				// Get the current status of the game after the play
-				GameStatus status = GameCheck.checkGame(player, tab, endGame);
+				status = GameCheck.checkGame(ai, tab, endGame);
 				String message =  generateMessage(status, player);
 
 				//sum the moves count
@@ -176,8 +182,8 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		
 		// Get the current status of the game after the play
 		GameStatus status = GameCheck.checkGame(player, tab, endGame);
-		String message =  generateMessage(status, player);				
-
+		
+		// String message =  generateMessage(status, player);			
 
 		while(player.isBlocked()){
 			try {
@@ -185,7 +191,8 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
             } catch (InterruptedException e) {}
 		}
 		
-		return tab.getState() + message;
+		//return tab.getState() + message;
+		return tab.getState();
 	}
 	
 	private String generateMessage(GameStatus status, IPlayer player) throws RemoteException {

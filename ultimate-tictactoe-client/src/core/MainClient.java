@@ -1,10 +1,6 @@
 package core;
 
-import java.rmi.Naming;
-import java.util.Scanner;
-
 import interfaces.IGame;
-import interfaces.IPlayer;
 
 import model.PlayerControl;
 

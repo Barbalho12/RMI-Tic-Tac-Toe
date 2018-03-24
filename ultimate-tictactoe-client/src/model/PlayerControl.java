@@ -37,7 +37,14 @@ public class PlayerControl {
 
 			System.out.print( player.getName() + "> ");
 	        board = scanIn.nextInt();
+	        
+	        while (board <= 0  || board >= 10) 
+	        	board = scanIn.nextInt();
+
 	        position = scanIn.nextInt();
+	        
+	        while (position <= 0  || position >= 10) 
+	        	position = scanIn.nextInt();
 
 	        String response = game.play(player, board, position );
 

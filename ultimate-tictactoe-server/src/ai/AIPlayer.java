@@ -3,6 +3,7 @@ package ai;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import game.UltimateBoard;
 import interfaces.IPlayer;
 
 public class AIPlayer extends UnicastRemoteObject implements IPlayer{
@@ -33,11 +34,15 @@ public class AIPlayer extends UnicastRemoteObject implements IPlayer{
 	
 	@Override
 	public void play(int board, int position) throws RemoteException {
+		this.board = board;
+		this.position = position;
+	}	
+	
+
+	public void makePlay(UltimateBoard board, int prevBoard, int prevPosition) throws RemoteException {
 		/*int i, input, opt;
     int k=0;
 
-    Tabuleiro *tab = new Tabuleiro();
-    tab->print();
 
     for(i = 1; i <= 81; i++){
         if (i % 2 == 0){

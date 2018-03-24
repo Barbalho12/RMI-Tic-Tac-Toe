@@ -40,10 +40,9 @@ public final class GameCheck implements IBoard {
 	
 	public static  GameStatus checkGame (IPlayer player, UltimateBoard tab, Boolean endGame) throws RemoteException{		
 		int chktable = tab.check_win();
-        
-        if(chktable == 1 || chktable == -1){
-        	endGame = true;
-        	
+		
+		if(chktable == 1 || chktable == -1){
+        	endGame = true;        	
             return GameStatus.GAME_WIN;
         }
         else if(tab.check_draw() == 1){
@@ -54,10 +53,16 @@ public final class GameCheck implements IBoard {
 		
 		// verify if someone won the current board
         int boardchk = tab.at(player.getBoard()).check_win();
-      
+		
         if (boardchk == 1 || boardchk == -1){
             tab.at(player.getBoard()).setValid(false);
             tab.at(player.getBoard()).setWinner(player.getName());
+            
+            chktable = tab.check_win();
+            if(chktable == 1 || chktable == -1){
+        		endGame = true;        	
+                return GameStatus.GAME_WIN;
+            }
             
             return GameStatus.BOARD_WIN;
         }
