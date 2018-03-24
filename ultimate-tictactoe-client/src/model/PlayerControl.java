@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 
 import enums.GameOptions;
+import interfaces.GameResponse;
 import interfaces.IGame;
 import interfaces.IPlayer;
 
@@ -39,9 +40,15 @@ public class PlayerControl {
 	        board = scanIn.nextInt();
 	        position = scanIn.nextInt();
 
-	        String response = game.play(player, board, position );
+	        GameResponse response = game.play(player, board, position );
 
-	        System.out.println(response);
+	        
+	        if(response.getSettings() != null)
+	        	printState(response.getSettings());
+	        if(response.getMessage() != null)
+	        	System.out.println(response.getMessage());
+	        else if(response.getAlert() != null)
+	        	System.err.println(response.getAlert());
 
 			try {
                 Thread.sleep(1000);
@@ -51,4 +58,67 @@ public class PlayerControl {
 		}
 
 	}
+	
+	/**
+	 * Get the board state into the console
+	 */
+    public String printState(String[] response){
+        int conti=0; // the column counter
+        int contj=0; // the line counter
+        int i, j;
+        
+        String state = "";
+
+        while(conti!=2){
+            for(i=0; i<3; i++){
+                for(j=0; j<3; j++){
+                	
+                	
+                	state += response[(i*9)+j+contj] + " ";
+                }
+                if(j%3!=0)	state += " | ";
+            }
+            contj+=3;
+            state += "\n";
+            System.out.println();
+            conti++;
+        }
+        state += "---------------------------------\n";
+
+        conti=0;
+        contj=0;
+
+        while(conti!=2){
+            for(i=3; i<6; i++){
+                for(j=0; j<3; j++){
+                	state += response[(i*9)+j+contj] + " ";
+                }
+                if(j%3!=0)	state += " | ";
+            }
+            contj+=3;
+            state += "\n";
+            conti++;
+        }
+        
+        state += "---------------------------------\n";
+
+        conti=0;
+        contj=0;
+
+        while(conti!=2){
+            for(i=6; i<9; i++){
+                for(j=0; j<3; j++){
+                	state += response[(i*9)+(j+contj)] + " ";
+                }
+                if(j%3!=0)	state += " | ";
+            }
+            contj+=3;
+            state += "\n";
+            conti++;
+        }
+        
+        state += "\n";
+        
+        return state;
+    }
 }

@@ -1,0 +1,33 @@
+.root {
+    -fx-font-size: 14px;
+    -fx-font-family: sans-serif;
+    -fx-padding: 1px;
+}
+
+
+Button {
+    -fx-font-size: 20px;
+    -fx-border-width: 1;
+    -fx-border-color: transparent transparent #E8E8E8 transparent;
+    -fx-text-color: #33cc33;
+    -fx-padding: 1px;
+    
+}
+
+.container{
+	-fx-padding: 1px;
+}
+
+.cell {
+    -fx-font-size: 20px;
+    -fx-border-width: 1;
+    -fx-border-color: transparent transparent #E8E8E8 transparent;
+}
+
+.cell-marked {
+    -fx-font-size: 20px;
+    -fx-border-width: 1;
+    -fx-border-color: transparent transparent #E8E8E8 transparent;
+    -fx-text-color: #b33c00;
+}
+

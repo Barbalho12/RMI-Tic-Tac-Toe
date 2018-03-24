@@ -11,6 +11,7 @@ import enums.GameOptions;
 import enums.GameStatus;
 
 import interfaces.IGame;
+import interfaces.GameResponse;
 import interfaces.IBoard;
 import interfaces.IPlayer;
 
@@ -49,14 +50,16 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		}
 	}
 		
-	public String play(IPlayer player, int board, int position) throws RemoteException {
+	public GameResponse play(IPlayer player, int board, int position) throws RemoteException {
+		
 		switch (option) {
 			case NORMAL: 
 				return playNormal(player, board, position);
 			case AI:
 				return playAI(player, board, position);
 			default:
-				return "ERROR";
+				
+				return new GameResponseImpl(null, null, "ERROR");
 		}
 	}
 
@@ -100,11 +103,33 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		} 
 		return tab.getState();
 	}
+	
+//	private GameResponse getScope(String msg){
+//		String text[] = new String[82];
+//		text[81] = msg;
+//		return new GameResponseImpl(text, null, null);
+//	}
+	
+	private GameResponse getScopeWithtab(String msg) throws RemoteException{
+		String text[] = new String[82];
+		int b = 1;
+		int p = 1;
+		for(int i = 0; i < 81; i++, p++){
+			text[i] = String.valueOf(tab.at(b).getBoardCharAt(p));
+			if(p == 9){
+				p = 0;
+				b++;
+			}
 			
-	private String playNormal(IPlayer player, int board, int position) throws RemoteException {
+		}
+		text[81] = msg;
+		return new GameResponseImpl(text, null, null);
+	}
+			
+	private GameResponse playNormal(IPlayer player, int board, int position) throws RemoteException {
 		// If the game already ended
 		if (endGame) {
-			return "O jogo acabou.\n";
+			return new GameResponseImpl(null,null,"O jogo acabou.\n");
 		}
 		// if this is the player 1
 		else if(p1.getId() == player.getId()){
@@ -114,7 +139,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 				return makePlay(p1, board, position, p2);
 			}
 			else 
-				return "Posicao ou jogada invalida.\n";
+				return new GameResponseImpl(null,null,"Posicao ou jogada invalida.\n");
 		}
 		// if this is the player 2 
 		else if(p2.getId() == player.getId()){
@@ -123,15 +148,15 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 				return makePlay(p2, board, position, p1);
 			}
 			else
-				return "Posicao ou jogada invalida.\n";
+				return new GameResponseImpl(null,null,"Posicao ou jogada invalida.\n");
 		}
 		return countPlays();
 	}
 	
-	private String playAI(IPlayer player, int board, int position) throws RemoteException {
+	private GameResponse playAI(IPlayer player, int board, int position) throws RemoteException {
 		// If the game already ended
 		if (endGame) {
-			return "O jogo acabou.\n";
+			return new GameResponseImpl(null,null,"O jogo acabou.\n");
 		}
 		// if this is the player 1
 		else if(p1.getId() == player.getId()){
@@ -155,16 +180,16 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 				//sum the moves count
 				countPlays++;
 				
-				return tab.getState() + message;
+				return getScopeWithtab(message);
 			}
 			else 
-				return "Posicao ou jogada invalida.\n";
+				return new GameResponseImpl(null,null,"Posicao ou jogada invalida.\n");
 		}
 		
 		return countPlays();
 	}
 
-	private String makePlay(IPlayer player, int board, int position, IPlayer other) throws RemoteException {
+	private GameResponse makePlay(IPlayer player, int board, int position, IPlayer other) throws RemoteException {
 		tab.at(board).setBoardCharAt(position, player.getName());		
 		
 		// Allow the player to make the movement
@@ -185,7 +210,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
             } catch (InterruptedException e) {}
 		}
 		
-		return tab.getState() + message;
+		return getScopeWithtab(message);
 	}
 	
 	private String generateMessage(GameStatus status, IPlayer player) throws RemoteException {
@@ -204,15 +229,15 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		return "";
 	}
 	
-	private String countPlays() {
+	private GameResponse countPlays() throws RemoteException {
 		countPlays++;
 
 		// If the total number of possible moves was achieved
 		if (countPlays >= 82) {
 			endGame = true;
-			return "O jogo acabou.\n";
+			return new GameResponseImpl(null,null,"O jogo acabou.\n");
 		}		
-		return "";
+		return new GameResponseImpl(null,null,null);
 	}
 	
 	public int getCredential() throws RemoteException {

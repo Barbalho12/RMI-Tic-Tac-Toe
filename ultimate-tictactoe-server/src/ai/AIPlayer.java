@@ -5,7 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import interfaces.IPlayer;
 
-public class AIPlayer extends UnicastRemoteObject implements IPlayer{
+public class AIPlayer implements IPlayer{
 	
 	private static final long serialVersionUID = 1L;
 	
