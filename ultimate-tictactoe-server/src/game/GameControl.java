@@ -22,7 +22,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 	private IPlayer p2 = null;  
 	private AIPlayer ai = null;
 
-	private boolean endGame = false;
+	public static boolean endGame = false;
 	
 	private int countCredentials = 0;
 	private int countPlays = 0;
@@ -100,14 +100,16 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 	}
 			
 	private String playNormal(IPlayer player, int board, int position) throws RemoteException {
-		if(tab.check_win() != 0)
-			endGame = true;        	
-        else if(tab.check_draw() == 1)
-        	endGame = true;
-        
+		
 		// If the game already ended
-		if (endGame) 
-			return "O jogo acabou.\n";
+		if(tab.check_win() != 0) {
+			endGame = true;        
+		  	return "O jogo acabou. O jogador "+ tab.getWinner() +" ganhou!\n";	
+		}
+        else if(tab.check_draw() == 1){
+			endGame = true;        
+		  	return "O jogo acabou. Deu velha!\n";	
+		}
 		
 		// if this is the player 1
 		else if(p1.getId() == player.getId()){
@@ -145,7 +147,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 				makePlay(p1, board, position, ai);
 
 				// Get the current status of the game after the play
-				GameStatus status = GameCheck.checkGame(player, tab, endGame);
+				GameStatus status = GameCheck.checkGame(player, tab, this);
 				
 				// make the AI movement
 				ai.makePlay(tab, board, position);
@@ -155,7 +157,7 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 				p1.setBlocked(false);	
 				
 				// Get the current status of the game after the play
-				status = GameCheck.checkGame(ai, tab, endGame);
+				status = GameCheck.checkGame(ai, tab, this);
 				String message =  generateMessage(status, player);
 
 				//sum the moves count
@@ -176,23 +178,32 @@ public class GameControl extends UnicastRemoteObject implements IGame, IBoard{
 		// Allow the player to make the movement
 		player.play(board, position);
 		
-		// Change the turn
-		player.setBlocked(true);
-		other.setBlocked(false);			
+					
 		
 		// Get the current status of the game after the play
-		GameStatus status = GameCheck.checkGame(player, tab, endGame);
+		GameStatus status = GameCheck.checkGame(player, tab, this);
+		
+		// Change the turn
+		player.setBlocked(true);
+		other.setBlocked(false);
 		
 		// String message =  generateMessage(status, player);			
-
-		while(player.isBlocked()){
-			try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {}
+		
+		if (status != GameStatus.GAME_WIN) {
+			while(player.isBlocked()){
+				try {
+	                Thread.sleep(1000);
+	            } catch (InterruptedException e) {}
+			}
+			if (endGame)
+				return tab.getState()+"\nVocê perdeu!\n";
+			
+			//return tab.getState() + message;
+			return tab.getState();
 		}
 		
 		//return tab.getState() + message;
-		return tab.getState();
+		return "Você ganhou!";
 	}
 	
 	private String generateMessage(GameStatus status, IPlayer player) throws RemoteException {

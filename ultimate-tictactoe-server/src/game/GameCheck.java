@@ -38,15 +38,15 @@ public final class GameCheck implements IBoard {
 		return true;
 	}
 	
-	public static  GameStatus checkGame (IPlayer player, UltimateBoard tab, Boolean endGame) throws RemoteException{		
+	public static  GameStatus checkGame (IPlayer player, UltimateBoard tab, GameControl gameCon) throws RemoteException{		
 		int chktable = tab.check_win();
 		
 		if(chktable == 1 || chktable == -1){
-        	endGame = true;        	
+			gameCon.endGame = true;        	
             return GameStatus.GAME_WIN;
         }
         else if(tab.check_draw() == 1){
-        	endGame = true;
+        	gameCon.endGame = true;
         	
             return GameStatus.GAME_DRAW;
         }
@@ -60,7 +60,7 @@ public final class GameCheck implements IBoard {
             
             chktable = tab.check_win();
             if(chktable == 1 || chktable == -1){
-        		endGame = true;        	
+            	gameCon.endGame = true;        	
                 return GameStatus.GAME_WIN;
             }
             
