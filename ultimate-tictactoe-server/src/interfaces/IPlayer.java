@@ -3,8 +3,6 @@ package interfaces;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import game.UltimateBoard;
-
 public interface IPlayer extends Remote {
 		
 	public void init(int id, char name, boolean blocked) throws RemoteException;

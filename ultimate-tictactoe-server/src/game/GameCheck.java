@@ -38,6 +38,7 @@ public final class GameCheck implements IBoard {
 		return true;
 	}
 	
+	@SuppressWarnings("static-access")
 	public static  GameStatus checkGame (IPlayer player, UltimateBoard tab, GameControl gameCon) throws RemoteException{		
 		int chktable = tab.check_win();
 		

@@ -84,6 +84,10 @@ public class TabHandler implements Initializable{
 
 			@Override
 			protected void succeeded() {
+				if(response.equals("\nO jogo foi encerrado pelo oponente!\n")) {
+					alert("\nO jogo foi encerrado pelo oponente!\n");
+					return;
+				}
 				try {
 					updateButtons(new Response(response));
 				} catch (RemoteException e) {
@@ -156,6 +160,12 @@ public class TabHandler implements Initializable{
 
 	@FXML
 	private void quit(ActionEvent event) {
+		try {
+			game.quit(player);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
+		}
 		System.exit(0);
 	}
 
@@ -192,6 +202,10 @@ public class TabHandler implements Initializable{
 
 				@Override
 				protected void succeeded() {
+					if(response.equals("\nO jogo foi encerrado pelo oponente!\n")) {
+						alert("\nO jogo foi encerrado pelo oponente!\n");
+						return;
+					}
 					try {
 						setDisableButtons(false);
 						updateButtons(new Response(response));
