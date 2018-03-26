@@ -62,19 +62,28 @@ public class PlayerControl {
 
 	}
 
-	static int tryReadValue(IGame game, IPlayer player) {
+	static int tryReadValue(IGame game, IPlayer player) throws RemoteException {
 		int value = 0;
-		String sboard = scanIn.next();
+		String sboard = ""; //= scanIn.next();
+		
+//		System.out.print(player.getName() + ">> ");
+		sboard = scanIn.next();
 		if (sboard.equalsIgnoreCase("q")) {
 			try {
 				game.quit(player);
 				System.exit(0);
 			} catch (RemoteException e) {
 			}
+
 		}
-		sboard = sboard.trim().replace(" ", "");
+		try {
+			value = Integer.valueOf(sboard);
+		}catch (Exception e) {
+			
+		}
 		
-		while ((sboard.charAt(0) < '1' || sboard.charAt(0) > '9')) {
+		while (value < 1 || value > 9) {
+			System.out.print(player.getName() + ">> ");
 			sboard = scanIn.next();
 			if (sboard.equalsIgnoreCase("q")) {
 				try {
@@ -84,9 +93,14 @@ public class PlayerControl {
 				}
 
 			}
-			sboard = sboard.trim().replace(" ", "");
+			try {
+				value = Integer.valueOf(sboard);
+			}catch (Exception e) {
+				
+			}
+			
 		}
-		value = Integer.valueOf(sboard);
+//		value = Integer.valueOf(sboard);
 		return value;
 
 	}
