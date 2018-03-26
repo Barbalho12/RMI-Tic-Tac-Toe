@@ -3,10 +3,13 @@ A tic-tac-toe that can be played by to users in different machines and a ultimat
 
 ## Information
 
-By default, when it is not specified: IP * and * Port * is:
+By default, when it is not specified: `IP` and `Port` is:
 
 `IP=localhost`  
 `PORT=1099` 
+
+Access releases to download the jar files in [Releases]
+
 
 ## Server
 
@@ -28,3 +31,6 @@ Client using terminal
 ```bash
 java -jar ultimate-tictactoe-client.jar <IP> <PORT>
 ```
+  
+  
+   [Releases]: <https://github.com/Barbalho12/RMI-Tic-Tac-Toe/releases>
