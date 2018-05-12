@@ -13,7 +13,7 @@ public class GameControl implements IGame, IBoard {
 
 	private UltimateBoard tab = new UltimateBoard();
 
-	private boolean quited = false;
+	public boolean quited = false;
 
 	private IPlayer p1 = null;
 	
@@ -74,8 +74,10 @@ public class GameControl implements IGame, IBoard {
 
 	public void exit(IPlayer player) {
 		quited = true;
+		
 		p1.setBlocked(false);
-		p2.setBlocked(false);
+		if(p2 != null)
+			p2.setBlocked(false);
 		try {
 			this.finalize();
 		} catch (Throwable e) {

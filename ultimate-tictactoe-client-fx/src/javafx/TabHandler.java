@@ -3,27 +3,27 @@ package javafx;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ResourceBundle;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
-import enums.GameOptions;
 import interfaces.IGame;
-import interfaces.IPlayer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import model.Player;
 import model.Response;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 
-public class TabHandler implements Initializable{
+public class TabHandler implements Initializable {
+
+	@FXML
+	private Label labelState;
 
 	@FXML
 	private Button p1_1, p1_2, p1_3, p1_4, p1_5, p1_6, p1_7, p1_8, p1_9;
@@ -60,38 +60,24 @@ public class TabHandler implements Initializable{
 
 	@FXML
 	private AnchorPane allpane;
-
-	@FXML
-	private void click(ActionEvent event) throws RemoteException {
-		Button node = (Button) event.getSource();
-
-		String value = node.getId();
-
-		// node.setText("X");
-		int board = Integer.valueOf(value.split("_")[0].substring(1));
-		int position = Integer.valueOf(value.split("_")[1]);
-
-		
-
-		Task<Object> tarefaCargaPg = new Task<Object>() {
+	
+	private void taskWait(Task<Object> tarefaCargaPg) {
+		Task<Object> tarefa2 = new Task<Object>() {
 			String response;
 
 			@Override
 			protected String call() throws Exception {
-				response = game.play(player, board, position);
-				if(response.length()<100) return response;
-				setDisableButtons(true);
+				while (!tarefaCargaPg.isDone()) {
+					sleep(100);
+				}
 				response = game.check(player);
-//				System.out.println(game.checkTurn(player));
-//				while(!game.checkTurn(player)) {
-//					Thread.sleep(1000);
-//				}
 				return response;
 			}
 
 			@Override
 			protected void succeeded() {
-				if(response.equals("\nO jogo foi encerrado pelo oponente!\n")) {
+				labelState.setText("");
+				if (response.equals("\nO jogo foi encerrado pelo oponente!\n") || game.checkQuited()) {
 					alert("\nO jogo foi encerrado pelo oponente!\n");
 					return;
 				}
@@ -105,10 +91,61 @@ public class TabHandler implements Initializable{
 
 			}
 		};
+		Thread t2 = new Thread(tarefa2);
+		t2.setDaemon(true);
+		t2.start();
+		
+	}
+
+	public void taskPlay(int board, int position) {
+
+		Task<Object> tarefaCargaPg = new Task<Object>() {
+			String response;
+
+			@Override
+			protected String call() throws Exception {
+				response = game.play(player, board, position);
+				if (response.length() < 100) {
+					return response;
+				}
+				setDisableButtons(true);
+				return response;
+			}
+
+			@Override
+			protected void succeeded() {
+				if (response.equals("\nO jogo foi encerrado pelo oponente!\n") || game.checkQuited()) {
+					alert("\nO jogo foi encerrado pelo oponente!\n");
+					return;
+				}
+				labelState.setText("Esperando oponente...");
+				taskWait(this);
+				try {
+					updateButtons(new Response(response));
+					
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+		};
 		Thread t = new Thread(tarefaCargaPg);
 		t.setDaemon(true);
 		t.start();
 
+		
+	}
+
+	@FXML
+	private void click(ActionEvent event) throws RemoteException {
+		Button node = (Button) event.getSource();
+
+		String value = node.getId();
+
+		int board = Integer.valueOf(value.split("_")[0].substring(1));
+		int position = Integer.valueOf(value.split("_")[1]);
+		taskPlay(board, position);
 	}
 
 	Button getButton(int board, int position) {
@@ -121,23 +158,24 @@ public class TabHandler implements Initializable{
 		if (response.getSettings() != null) {
 			int i = 0;
 			for (Node npane : allpane.getChildren()) {
-				Pane pane = (Pane) npane;
-				for (Node nbut : pane.getChildren()) {
-					Button button = (Button) nbut;
-					if (response.getSettings()[i].equals("X") || response.getSettings()[i].equals("O"))
-						button.setText(response.getSettings()[i]);
-					i++;
+				try {
+					Pane pane = (Pane) npane;
+					for (Node nbut : pane.getChildren()) {
+						Button button = (Button) nbut;
+						if (response.getSettings()[i].equals("X") || response.getSettings()[i].equals("O"))
+							button.setText(response.getSettings()[i]);
+						i++;
+					}
+				} catch (Exception e) {
 				}
+
 			}
 
 		}
 		if (response.getMessage() != null) {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
 			alert.setTitle("Message");
-
 			alert.setContentText(response.getMessage());
-
 			alert.show();
 		}
 
@@ -145,10 +183,13 @@ public class TabHandler implements Initializable{
 
 	void setDisableButtons(boolean mode) {
 		for (Node npane : allpane.getChildren()) {
-			Pane pane = (Pane) npane;
-			for (Node nbut : pane.getChildren()) {
-				Button button = (Button) nbut;
-				button.setDisable(mode);
+			try {
+				Pane pane = (Pane) npane;
+				for (Node nbut : pane.getChildren()) {
+					Button button = (Button) nbut;
+					button.setDisable(mode);
+				}
+			} catch (Exception e) {
 			}
 		}
 	}
@@ -157,7 +198,6 @@ public class TabHandler implements Initializable{
 	public GameREST game;
 
 	public TabHandler() throws NotBoundException {
-		
 
 	}
 
@@ -167,96 +207,67 @@ public class TabHandler implements Initializable{
 
 	@FXML
 	private void quit(ActionEvent event) {
-//		try {
-			game.quit(player);
-//		} catch (RemoteException e) {
-//			// TODO Auto-generated catch block
-////			e.printStackTrace();
-//		}
+		game.quit(player);
 		System.exit(0);
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-//		try {
+		game = new GameREST();
 
-//			String address = "rmi://" + FXMain.ip + ":" + FXMain.port + "/" + FXMain.NAME;
+		Task<Object> tarefaCargaPg = new Task<Object>() {
 
-//			System.out.println(address);
+			String response;
 
-//			Registry reg = LocateRegistry.getRegistry(FXMain.ip, FXMain.port);
+			@Override
+			protected String call() throws Exception {
+				while (allpane == null) {
+					sleep(20);
+				}
+				setDisableButtons(true);
+				player = game.init();
+				labelState.setText("Esperando oponente...");
+				response = game.check(player);
+				return null;
+			}
 
-			// Recuperando o objeto remoto via o servidor de nomes
-//			game = (IGame) reg.lookup(address);
-			game = new  GameREST();
-//			player = new Player();
-			
-
-			
-
-			Task<Object> tarefaCargaPg = new Task<Object>() {
-
-				String response;
+			@Override
+			protected void succeeded() {
+				labelState.setText("");
+				if (response.equals("\nO jogo foi encerrado pelo oponente!\n") || game.checkQuited()) {
+					alert("\nO jogo foi encerrado pelo oponente!\n");
+					return;
+				}
+				try {
+					
+					setDisableButtons(false);
+					updateButtons(new Response(response));
+					alert("Iniciado! pode jogar");
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 				
-				@Override
-				protected String call() throws Exception {
-					while (allpane == null) {
-					}
-					setDisableButtons(true);
-//					alert("Iniciado! Esperando adversário");
-					player = game.init();
-					response = game.board();
-//					response = game.init(player, GameOptions.values()[0]);
-					return null;
-				}
+			}
+		};
+		Thread t = new Thread(tarefaCargaPg);
+		t.setDaemon(true);
+		t.start();
 
-				@Override
-				protected void succeeded() {
-					if(response.equals("\nO jogo foi encerrado pelo oponente!\n")) {
-						alert("\nO jogo foi encerrado pelo oponente!\n");
-						return;
-					}
-					try {
-						setDisableButtons(false);
-						updateButtons(new Response(response));
-						alert("Iniciado! pode jogar");
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					
-
-				}
-			};
-			Thread t = new Thread(tarefaCargaPg);
-			t.setDaemon(true);
-			t.start();
-			
-			
-		
-
-//		} catch (RemoteException e) {
-//			alert("Ocorreu um erro no servidor");
-//			setDisableButtons(false);
-////			System.err.println("Server exception: " + e.toString());
-//			e.printStackTrace();
-//		} catch (NotBoundException e1) {
-//			alert("Erro ao tentar identificar "+ FXMain.NAME +" in "+ FXMain.ip +":"+FXMain.port);
-////			e1.printStackTrace();
-//		}
-		
 	}
-	
+
 	void alert(String message) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
 		alert.setTitle("Message");
-
 		alert.setContentText(message);
-
 		alert.show();
-		
+	}
+
+	public static void sleep(int milliseconds) {
+		try {
+			Thread.sleep(milliseconds);
+		} catch (Exception e) {
+
+		}
 	}
 
 }

@@ -57,18 +57,19 @@ public class RestGameControl {
 	@Path("/checkTurn")
 	public String checkTurn(@QueryParam("id_player") int id_player) {
 
-		if (count_init < 2)
+		if (count_init < 2) {
 			return "Esperando adversário!";
+		}
 
 		IPlayer player = gameControl.getPlayer(id_player);
 
-		if (!gameControl.lastPlayer.equals(player))
+		if (gameControl.lastPlayer == null && id_player == 1) {
 			return "true";
-
-		if (gameControl.lastPlayer == null && id_player == 1)
+		} else if (gameControl.lastPlayer != null && !gameControl.lastPlayer.equals(player)) {
 			return "true";
-
-		return "false";
+		}
+		
+		return checkQuited();
 
 	}
 
@@ -76,24 +77,29 @@ public class RestGameControl {
 	@GET
 	@Path("/board")
 	public String board() {
-
-		// if (count_init < 2) return "Esperando adversário!";
-
-		// IPlayer player = gameControl.getPlayer(id_player);
-		// if (!gameControl.lastPlayer.equals(player)) {
 		return gameControl.getTab().getState();
-		// }
-
-		// return "";
-
 	}
 
-	public void exit(IPlayer player) {
-
+	@GET
+	@Path("/quit")
+	public String quit(@QueryParam("id_player") int id_player) {
+		if (count_init > 0) {
+			IPlayer player = gameControl.getPlayer(id_player);
+			gameControl.exit(player);
+			return "";
+		}else {
+			return "";
+		}
 	}
-
-	public int getCredential() {
-		return 0;
+	
+	@GET
+	@Path("/checkQuited")
+	public String checkQuited() {
+		if (gameControl.quited) {
+			return "true";
+		}else {
+			return "false";
+		}
 	}
 
 }
