@@ -71,7 +71,7 @@ public class TabHandler implements Initializable{
 		int board = Integer.valueOf(value.split("_")[0].substring(1));
 		int position = Integer.valueOf(value.split("_")[1]);
 
-		setDisableButtons(true);
+		
 
 		Task<Object> tarefaCargaPg = new Task<Object>() {
 			String response;
@@ -79,6 +79,13 @@ public class TabHandler implements Initializable{
 			@Override
 			protected String call() throws Exception {
 				response = game.play(player, board, position);
+				if(response.length()<100) return response;
+				setDisableButtons(true);
+				response = game.check(player);
+//				System.out.println(game.checkTurn(player));
+//				while(!game.checkTurn(player)) {
+//					Thread.sleep(1000);
+//				}
 				return response;
 			}
 
@@ -146,8 +153,8 @@ public class TabHandler implements Initializable{
 		}
 	}
 
-	public IPlayer player;
-	public IGame game;
+	public int player;
+	public GameREST game;
 
 	public TabHandler() throws NotBoundException {
 		
@@ -160,29 +167,30 @@ public class TabHandler implements Initializable{
 
 	@FXML
 	private void quit(ActionEvent event) {
-		try {
+//		try {
 			game.quit(player);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-		}
+//		} catch (RemoteException e) {
+//			// TODO Auto-generated catch block
+////			e.printStackTrace();
+//		}
 		System.exit(0);
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		try {
+//		try {
 
-			String address = "rmi://" + FXMain.ip + ":" + FXMain.port + "/" + FXMain.NAME;
+//			String address = "rmi://" + FXMain.ip + ":" + FXMain.port + "/" + FXMain.NAME;
 
-			System.out.println(address);
+//			System.out.println(address);
 
-			Registry reg = LocateRegistry.getRegistry(FXMain.ip, FXMain.port);
+//			Registry reg = LocateRegistry.getRegistry(FXMain.ip, FXMain.port);
 
 			// Recuperando o objeto remoto via o servidor de nomes
-			game = (IGame) reg.lookup(address);
-
-			player = new Player();
+//			game = (IGame) reg.lookup(address);
+			game = new  GameREST();
+//			player = new Player();
+			
 
 			
 
@@ -196,7 +204,9 @@ public class TabHandler implements Initializable{
 					}
 					setDisableButtons(true);
 //					alert("Iniciado! Esperando adversário");
-					response = game.init(player, GameOptions.values()[0]);
+					player = game.init();
+					response = game.board();
+//					response = game.init(player, GameOptions.values()[0]);
 					return null;
 				}
 
@@ -224,18 +234,17 @@ public class TabHandler implements Initializable{
 			t.start();
 			
 			
-			
-			
+		
 
-		} catch (RemoteException e) {
-			alert("Ocorreu um erro no servidor");
-			setDisableButtons(false);
-//			System.err.println("Server exception: " + e.toString());
-			e.printStackTrace();
-		} catch (NotBoundException e1) {
-			alert("Erro ao tentar identificar "+ FXMain.NAME +" in "+ FXMain.ip +":"+FXMain.port);
-//			e1.printStackTrace();
-		}
+//		} catch (RemoteException e) {
+//			alert("Ocorreu um erro no servidor");
+//			setDisableButtons(false);
+////			System.err.println("Server exception: " + e.toString());
+//			e.printStackTrace();
+//		} catch (NotBoundException e1) {
+//			alert("Erro ao tentar identificar "+ FXMain.NAME +" in "+ FXMain.ip +":"+FXMain.port);
+////			e1.printStackTrace();
+//		}
 		
 	}
 	
