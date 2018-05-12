@@ -3,8 +3,8 @@ package com.ufrn.ai;
 //import java.rmi.RemoteException;
 //import java.rmi.server.UnicastRemoteObject;
 
-import com.ufrn.game.UltimateBoard;
-import com.ufrn.interfaces.IPlayer;
+//import com.ufrn.game.UltimateBoard;
+//import com.ufrn.interfaces.IPlayer;
 
 public class AIPlayer/* extends UnicastRemoteObject implements IPlayer*/{
 

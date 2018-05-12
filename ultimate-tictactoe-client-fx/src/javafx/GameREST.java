@@ -56,6 +56,7 @@ public class GameREST {
 
 	public void quit(int id_player) {
 		String s = "http://localhost:8080/tictactoews/rest/quit?id_player=" + id_player;
+		@SuppressWarnings("unused")
 		String response = requestGET(s);
 	}
 

@@ -18,7 +18,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import model.Response;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 
 public class TabHandler implements Initializable {
 
@@ -60,7 +59,7 @@ public class TabHandler implements Initializable {
 
 	@FXML
 	private AnchorPane allpane;
-	
+
 	private void taskWait(Task<Object> tarefaCargaPg) {
 		Task<Object> tarefa2 = new Task<Object>() {
 			String response;
@@ -94,7 +93,7 @@ public class TabHandler implements Initializable {
 		Thread t2 = new Thread(tarefa2);
 		t2.setDaemon(true);
 		t2.start();
-		
+
 	}
 
 	public void taskPlay(int board, int position) {
@@ -122,11 +121,11 @@ public class TabHandler implements Initializable {
 				taskWait(this);
 				try {
 					updateButtons(new Response(response));
-					
+
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 
 		};
@@ -134,7 +133,6 @@ public class TabHandler implements Initializable {
 		t.setDaemon(true);
 		t.start();
 
-		
 	}
 
 	@FXML
@@ -239,14 +237,14 @@ public class TabHandler implements Initializable {
 					return;
 				}
 				try {
-					
+
 					setDisableButtons(false);
 					updateButtons(new Response(response));
 					alert("Iniciado! pode jogar");
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 		};
 		Thread t = new Thread(tarefaCargaPg);

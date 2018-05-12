@@ -1,6 +1,6 @@
 package com.ufrn.game;
 
-import com.ufrn.ai.AIPlayer;
+//import com.ufrn.ai.AIPlayer;
 
 import com.ufrn.enums.GameOptions;
 import com.ufrn.enums.GameStatus;

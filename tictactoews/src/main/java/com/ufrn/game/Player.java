@@ -4,7 +4,7 @@ import com.ufrn.interfaces.IPlayer;
 
 public class Player implements IPlayer{
 	
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 	
 	private int id;
 	private int board;
