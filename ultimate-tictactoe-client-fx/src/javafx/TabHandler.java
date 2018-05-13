@@ -80,13 +80,14 @@ public class TabHandler implements Initializable {
 					alert("\nO jogo foi encerrado pelo oponente!\n");
 					return;
 				}
-				try {
-					updateButtons(new Response(response));
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				} finally {
-					setDisableButtons(false);
+
+				updateButtons(new Response(response));
+				if (game.endGame()) {
+					alert("\nVoce perdeu!\n");
+					return;
 				}
+
+				setDisableButtons(false);
 
 			}
 		};
@@ -104,7 +105,7 @@ public class TabHandler implements Initializable {
 			@Override
 			protected String call() throws Exception {
 				response = game.play(player, board, position);
-				if (response.length() < 100) {
+				if (response.length() < 100 && !response.equals("Voce ganhou!")) {
 					return response;
 				}
 				setDisableButtons(true);
@@ -117,14 +118,14 @@ public class TabHandler implements Initializable {
 					alert("\nO jogo foi encerrado pelo oponente!\n");
 					return;
 				}
+				if (response.equals("Voce ganhou!")) {
+					updateButtons(new Response(game.board()));
+					alert("\nVoce ganhou!\n");
+					return;
+				}
 				labelState.setText("Esperando oponente...");
 				taskWait(this);
-				try {
-					updateButtons(new Response(response));
-
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
+				updateButtons(new Response(response));
 
 			}
 
@@ -152,7 +153,7 @@ public class TabHandler implements Initializable {
 		return button;
 	}
 
-	void updateButtons(Response response) throws RemoteException {
+	void updateButtons(Response response) {
 		if (response.getSettings() != null) {
 			int i = 0;
 			for (Node npane : allpane.getChildren()) {
@@ -236,14 +237,10 @@ public class TabHandler implements Initializable {
 					alert("\nO jogo foi encerrado pelo oponente!\n");
 					return;
 				}
-				try {
 
-					setDisableButtons(false);
-					updateButtons(new Response(response));
-					alert("Iniciado! pode jogar");
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
+				setDisableButtons(false);
+				updateButtons(new Response(response));
+				alert("Iniciado! pode jogar");
 
 			}
 		};

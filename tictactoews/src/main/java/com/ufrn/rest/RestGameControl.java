@@ -77,7 +77,7 @@ public class RestGameControl {
 	@GET
 	@Path("/quit")
 	public String quit(@QueryParam("id_player") int id_player) {
-		if (count_init > 0) {
+		if (id_player > 0 && id_player <= 2 ) {
 			IPlayer player = gameControl.getPlayer(id_player);
 			gameControl.exit(player);
 			return "";
@@ -90,6 +90,16 @@ public class RestGameControl {
 	@Path("/checkQuited")
 	public String checkQuited() {
 		if (gameControl.quited) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+	
+	@GET
+	@Path("/endGame")
+	public String endGame() {
+		if (GameControl.endGame) {
 			return "true";
 		} else {
 			return "false";

@@ -35,7 +35,7 @@ public class GameControl implements IGame, IBoard {
 
 	public static boolean endGame = false;
 
-	private int countCredentials = 0;
+	private static int countCredentials = 0;
 	private int countPlays = 0;
 
 	public int getCountPlays() {

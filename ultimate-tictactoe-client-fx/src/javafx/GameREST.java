@@ -98,4 +98,12 @@ public class GameREST {
 		return requestGET("http://"+IP+":"+PORT+"/tictactoews/rest/board");
 	}
 
+	public boolean endGame() {
+		String s = requestGET("http://"+IP+":"+PORT+"/tictactoews/rest/endGame");
+		if (s.equals("true")) {
+			return true;
+		} 
+		return false;
+	}
+
 }
