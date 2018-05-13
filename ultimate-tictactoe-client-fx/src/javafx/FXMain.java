@@ -10,8 +10,8 @@ import javafx.stage.Stage;
 public class FXMain extends Application {
 	
 	static String ip = "localhost";
-	static int port = 1099;
-	static final String NAME = "Game";
+	static int port = 8080;
+//	static final String NAME = "Game";
 	
 	static void tryReadArgs(String args[]){
 		if(args.length > 0) {
@@ -25,7 +25,7 @@ public class FXMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("ultimate_board.fxml"));
-        primaryStage.setTitle("RMI Ultimate Tic Tac Toe");
+        primaryStage.setTitle("Ultimate Tic Tac Toe");
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);

@@ -7,6 +7,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class GameREST {
+	
+	String IP = FXMain.ip;
+	int PORT = FXMain.port;
 
 	public String requestGET(String urls) {
 		String message = "";
@@ -35,16 +38,16 @@ public class GameREST {
 	}
 
 	public int init() throws Exception {
-		String s = requestGET("http://localhost:8080/tictactoews/rest/init?game_option=NORMAL");
+		String s = requestGET("http://"+IP+":"+PORT+"/tictactoews/rest/init?game_option=NORMAL");
 		if (!s.equals("ERROR")) {
 			return Integer.valueOf(s);
 		} else {
 			throw new Exception("Partida cheia!");
 		}
 	}
-
+	
 	public String play(int id_player, int board, int position) throws Exception {
-		String s = "http://localhost:8080/tictactoews/rest/play?id_player=" + id_player + "&board=" + board
+		String s = "http://"+IP+":"+PORT+"/tictactoews/rest/play?id_player=" + id_player + "&board=" + board
 				+ "&position=" + position;
 		String response = requestGET(s);
 		if (!response.equals("ERROR")) {
@@ -55,13 +58,13 @@ public class GameREST {
 	}
 
 	public void quit(int id_player) {
-		String s = "http://localhost:8080/tictactoews/rest/quit?id_player=" + id_player;
+		String s = "http://"+IP+":"+PORT+"/tictactoews/rest/quit?id_player=" + id_player;
 		@SuppressWarnings("unused")
 		String response = requestGET(s);
 	}
 
 	public boolean checkTurn(int id_player) throws Exception {
-		String s = "http://localhost:8080/tictactoews/rest/checkTurn?id_player=" + id_player;
+		String s = "http://"+IP+":"+PORT+"/tictactoews/rest/checkTurn?id_player=" + id_player;
 		String response = requestGET(s);
 
 		if (response.equals("true")) {
@@ -84,7 +87,7 @@ public class GameREST {
 	}
 	
 	public boolean checkQuited() {
-		String s = requestGET("http://localhost:8080/tictactoews/rest/checkQuited");
+		String s = requestGET("http://"+IP+":"+PORT+"/tictactoews/rest/checkQuited");
 		if (s.equals("true")) {
 			return true;
 		} 
@@ -92,7 +95,7 @@ public class GameREST {
 	}
 
 	public String board() {
-		return requestGET("http://localhost:8080/tictactoews/rest/board");
+		return requestGET("http://"+IP+":"+PORT+"/tictactoews/rest/board");
 	}
 
 }
