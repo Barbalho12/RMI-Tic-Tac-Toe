@@ -213,7 +213,7 @@ public class TabHandler implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		game = new GameREST();
-
+		labelState.setText("Esperando oponente...");
 		Task<Object> tarefaCargaPg = new Task<Object>() {
 
 			String response;
@@ -225,7 +225,7 @@ public class TabHandler implements Initializable {
 				}
 				setDisableButtons(true);
 				player = game.init();
-				labelState.setText("Esperando oponente...");
+				
 				response = game.check(player);
 				return null;
 			}
