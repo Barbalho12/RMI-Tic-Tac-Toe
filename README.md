@@ -18,7 +18,7 @@ Download a servlet container, we recommend [Apache Tomcat]:
 ```bash
 wget http://ftp.unicamp.br/pub/apache/tomcat/tomcat-8/v8.0.52/bin/apache-tomcat-8.0.52.zip 
 unzip apache-tomcat-8.0.52.zip 
-mv apache-tomcat-8.0.52.zip tomcat
+mv apache-tomcat-8.0.52/ tomcat/
 ```
 
 Move the `tictactoews.war` file to `tomcat/webapps/`
@@ -30,6 +30,7 @@ mv tictactoews.war tomcat/webapps/
 Execute Tomcat with logs view:
 
 ```bash
+chmod +x tomcat/bin/*.sh
 ./tomcat/bin/startup.sh; tail -f tomcat/logs/catalina.out
 ```
 
